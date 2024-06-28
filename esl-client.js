@@ -282,6 +282,13 @@ var eslConnect = function (host, port, pass, callback_preHep) {
 var getRTCPMessage = function (e, xcid, hep_id, hep_pass) {
   var call = db.get(e.getHeader("Unique-ID"));
 
+  // Ignore RTCP events for calls that aren't in the database. This can happen
+  // if hepipe is just starting up but the telephony service already has calls
+  // in progress.
+  if (!call) {
+    return;
+  }
+
   if (e.getHeader("Event-Name") == "RECV_RTCP_MESSAGE") {
     if (!call.recvSSRC) {
       call.recvSSRC = e.getHeader("Source0-SSRC");

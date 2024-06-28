@@ -33,6 +33,10 @@ module.exports = {
     socket = getSocket("udp4");
   },
   preHep: function (message) {
+    if (!message) {
+      return;
+    }
+
     var rcinfo = message.rcinfo;
     var msg = message.payload;
     if (
